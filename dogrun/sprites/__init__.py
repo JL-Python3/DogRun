@@ -1,6 +1,9 @@
 #! usr/bin/env python
 # dogrun/sprites/__init__.py
 
+import os
+import random
+
 from dogrun import *
 
 
@@ -13,7 +16,16 @@ def load_images(directory, dimensions):
     :param dimensions:
     :return:
     """
-    pass
+    image_objects = []
+
+    for file in os.listdir(directory):
+        image = pygame.transform.scale(
+            pygame.image.load(os.path.join(directory, file)),
+            dimensions
+        )
+        image_objects.append(image)
+
+    return tuple(image_objects)
 
 
 class DogSprite:
@@ -50,9 +62,22 @@ class DogSprite:
         """
         self.name = name
 
-        # TODO: Get directory containing sprite images
+        self.directory = os.path.join("dogrun", "sprites", self.name)
 
-        # TODO: Load all sprite images from directory
+        directories = []
+        for d in os.listdir(self.directory):
+            if os.path.isdir(os.path.join(self.directory, d)):
+                directories.append(os.path.join(self.directory, d))
+        directories = sorted(directories)
+
+        images = []
+        for d in directories:
+            images.append(load_images(d, self.image_dimensions))
+        images = tuple(images)
+
+        (self.resting, self.running, self.sitting_front, self.sitting_right,
+         self.walking_back, self.walking_front, self.walking_left,
+         self.walking_right) = images
 
         self.posx, self.posy = start
         self.frame = 0
@@ -110,9 +135,24 @@ class SquirrelSprite:
         """
         :param start:
         """
-        # TODO: Get directories containing sprite images
+        self.directory = os.path.join("dogrun", "sprites", "squirrel")
 
-        # TODO: Load all sprite images
+        directories = []
+        for d in os.listdir(self.directory):
+            if os.path.isdir(os.path.join(self.directory, d)):
+                directories.append(os.path.join(self.directory, d))
+        directories = sorted(directories)
+
+        images = []
+        for d in directories:
+            images.append(load_images(d, self.image_dimensions))
+        images = tuple(images)
+
+        (self.inspecting_left, self.inspecting_right, self.looking_back,
+         self.looking_front, self.looking_left, self.looking_right,
+         self.resting, self.running_back, self.running_front,
+         self.running_left, self.running_right, self.sitting_back,
+         self.sitting_front, self.sitting_left, self.sitting_right) = images
 
         self.posx, self.posy = start
         self.frame = 0
@@ -157,13 +197,16 @@ class BushSprite:
     image_dimensions = (
         int(16 * SCALE * factor), int(9 * SCALE * factor)
     )
-    # TODO: Load all sprite images
+    images = load_images(
+        os.path.join("dogrun", "sprites", "bushes"),
+        image_dimensions
+    )
 
     def __init__(self, start):
         """
         :param start:
         """
-        # TODO: Select random sprite image
+        self.image = random.choice(self.images)
 
         self.posx, self.posy = start
 
@@ -187,7 +230,7 @@ class BushSprite:
         """
         :param surface:
         """
-        # TODO: Blit sprite image onto surface
+        surface.blit(self.image, (self.posx, self.posy))
 
 
 class BoneSprite:
@@ -200,13 +243,24 @@ class BoneSprite:
     interval = 3
     factor = 1
     image_dimensions = (int(SCALE * factor), int(SCALE * factor))
-    # TODO: Load sprite image
+    image = pygame.transform.scale(
+        pygame.image.load(
+            os.path.join("dogrun", "sprites", "bone.png")
+        ), image_dimensions
+    )
 
     def __init__(self, start):
         """
         :param start:
         """
-        # TODO: Generate rotations of sprite image
+        self.images = []
+        for angle in range(0, 360, 45):
+            self.images.append(
+                pygame.transform.rotate(
+                    self.image, angle
+                )
+            )
+        self.images = tuple(self.images)
 
         self.posx, self.posy = start
         self.frame = 0
@@ -249,7 +303,11 @@ class PuddleSprite:
     image_dimensions = (
         int(16 * SCALE * factor), int(9 * SCALE * factor)
     )
-    # TODO: Load sprite image
+    image = pygame.transform.scale(
+        pygame.image.load(
+            os.path.join("dogrun", "sprites", "puddle.png")
+        ), image_dimensions
+    )
 
     def __init__(self, start):
         """
@@ -279,7 +337,7 @@ class PuddleSprite:
         """
         :param surface:
         """
-        # TODO: Blit sprite image onto surface
+        surface.blit(self.image, (self.posx, self.posy))
 
 
 # TODO: Define class for duck sprites

@@ -1,6 +1,7 @@
 #! usr/bin/env python
 # dogrun/game/__init__.py
 
+import os
 import random
 
 from dogrun import *
@@ -14,7 +15,11 @@ class GameScreen:
 
     num_lanes = 4
 
-    # TODO: Load background image
+    background = pygame.transform.scale(
+        pygame.image.load(
+            os.path.join("dogrun", "sprites", "grass.png")
+        ), (4 * SCALE, 4 * SCALE)
+    )
 
     def __init__(self, surface, clock, dog_sprite, username):
         """
@@ -29,6 +34,8 @@ class GameScreen:
         self.username = username
 
         self.score_display = ScoreDisplay()
+        self.exit_button = ExitButton()
+        self.playpause_button = PlayPauseButton()
 
         self.dog_sprite = sprites.DogSprite(dog_sprite)
 
@@ -50,18 +57,26 @@ class GameScreen:
         """
         self.surface.fill(pygame.Color("black"))
 
-        # TODO: Update dog sprite border
+        # Update dog sprite border
+        self.dog_sprite.update_rect(self.surface)
 
-        # TODO: Update lane items sprite borders
+        # Update lane items sprite borders
+        for lane in self.lanes:
+            lane.update_rect(self.surface)
 
         self.update_background()
 
-        # TODO: Update dog sprite image
+        # Update dog sprite image
+        self.dog_sprite.update(self.surface, self.dog_sprite.running)
 
-        # TODO: Update lane items sprite images
+        # Update lane items sprite images
+        for lane in self.lanes:
+            lane.update(self.surface)
 
         # Update widgets
         self.score_display.update(self.surface)
+        self.exit_button.update(self.surface)
+        self.playpause_button.update(self.surface)
 
         display_fps(self.surface, self.clock)
 
@@ -71,7 +86,7 @@ class GameScreen:
         # Repeatedly blit background image to surface
         for x in range(self.displacement, WINWIDTH - self.displacement, SCALE * 4):
             for y in range(0, WINHEIGHT, SCALE * 4):
-                # TODO: Blit background image to surface
+                self.surface.blit(self.background, (x, y))
                 pass
 
         if not self.paused:
@@ -86,9 +101,10 @@ class GameScreen:
             # TODO: Check for collisions between dog sprite and lane items sprites
 
             if not self.paused:
-                # TODO: Move dog sprite
+                self.dog_sprite.move()
 
-                # TODO: Move lanes
+                for lane in self.lanes:
+                    lane.move()
 
                 self.score_display.score = self.score_display.score + 1
 
@@ -138,9 +154,83 @@ class ScoreDisplay:
         # Blit text surface onto surface
         surface.blit(text_surf, (0, WINHEIGHT - text_surf.get_height()))
 
-# TODO: Define class for a button widget to exit the game screen
 
-# TODO: Define class for a button widget to play/pause the game
+class ExitButton:
+    """
+    """
+    # Box constants
+    border_color = pygame.Color("black")
+
+    # Image constants
+    factor = 1.5
+    image_dimensions = (
+        int(SCALE * factor), int(SCALE * factor)
+    )
+    image = pygame.transform.scale(
+        pygame.image.load("exit.png"), image_dimensions
+    )
+
+    def __init__(self):
+        """
+        """
+        self.coordinates = (
+            int((WIDTH - self.factor) * SCALE), 0
+        )
+
+        self.box = pygame.Rect(
+            self.coordinates, self.image_dimensions
+        )
+
+    def update_rect(self, surface):
+        """
+        :param surface: A PyGame 'Surface' object
+        """
+        pygame.draw.rect(surface, self.border_color, self.box, 1)
+
+    def update(self, surface):
+        """
+        :param surface: A PyGame 'Surface' object
+        """
+        surface.blit(self.image, self.coordinates)
+
+
+class PlayPauseButton:
+    """
+    """
+    # Box constants
+    border_color = pygame.Color("black")
+
+    # Image constants
+    factor = ExitButton.factor
+    image_dimensions = ExitButton.image_dimensions
+    image = pygame.transform.scale(
+        pygame.image.load("play pause.png"), image_dimensions
+    )
+
+    def __init__(self):
+        """
+        """
+        self.coordinates = (
+            int((WIDTH - 2 * self.factor) * SCALE), 0
+        )
+
+        self.box = pygame.Rect(
+            self.coordinates, self.image_dimensions
+        )
+
+    def update_rect(self, surface):
+        """
+        :param surface: A PyGame 'Surface' object
+        """
+        pygame.draw.rect(
+            surface, self.border_color, self.box, 1
+        )
+
+    def update(self, surface):
+        """
+        :param surface: A PyGame 'Surface' object
+        """
+        surface.blit(self.image, self.coordinates)
 
 
 class Lane:
@@ -189,7 +279,7 @@ class Lane:
             WINWIDTH, random.randint(self.yrange[0], self.yrange[1])
         )
 
-        # TODO: Append new object of selected class to obstacles
+        self.obstacles.append(obstacle(position))
 
     def add_modifier(self):
         """
@@ -202,7 +292,7 @@ class Lane:
             WINWIDTH, random.randint(self.yrange[0], self.yrange[1])
         )
 
-        # TODO: Append new object of selected class to modifiers
+        self.modifiers.append(modifier(position))
 
     def move(self):
         """
@@ -210,16 +300,22 @@ class Lane:
         objects = self.obstacles + self.modifiers
 
         for item in objects:
-            # TODO: Move item sprite
+            item.move()
 
-            # TODO: Remove item if sprite position is outside the window bounds
-            pass
+            # Remove item if sprite position is outside the window bounds
+            if item.box.right < 0 or item.box.left > WINWIDTH:
+                if item in self.obstacles:
+                    self.obstacles.remove(item)
+                elif item in self.modifiers:
+                    self.modifiers.remove(item)
 
     def update_rect(self, surface):
         """
         :param surface: A PyGame 'Surface' object
         """
-        # TODO: Update items sprite borders
+        # Update sprite borders
+        for item in self.obstacles + self.modifiers:
+            item.update_rect(surface)
 
     def update(self, surface):
         """
