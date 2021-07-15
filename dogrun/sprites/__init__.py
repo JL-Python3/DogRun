@@ -75,7 +75,11 @@ class DogSprite:
         """
         :param surface:
         """
-        # TODO: Draw sprite border onto surface
+        # Draw sprite border onto surface
+        self.box = pygame.Rect(
+            (self.posx, self.posy), self.image_dimensions
+        )
+        pygame.draw.rect(surface, BORDER_COLOR, self.box, 1)
 
     def update(self, surface, sprites):
         """
@@ -87,13 +91,196 @@ class DogSprite:
         self.frame = self.frame + 1
 
 
-# TODO: Define class for squirrel sprites
+class SquirrelSprite:
+    """
+    """
+    # Frame interval constant
+    interval = 2
 
-# TODO: Define class for bush sprites
+    # Sprite speed constant
+    speed = int(SPEED * 4)
 
-# TODO: Define class for bone sprites
+    # Image constants
+    factor = 1.5
+    image_dimensions = (
+        int(SCALE * factor), int(SCALE * factor)
+    )
 
-# TODO: Define class for puddle sprites
+    def __init__(self, start):
+        """
+        :param start:
+        """
+        # TODO: Get directories containing sprite images
+
+        # TODO: Load all sprite images
+
+        self.posx, self.posy = start
+        self.frame = 0
+
+        self.box = pygame.Rect(
+            (self.posx, self.posy), self.image_dimensions
+        )
+
+    def move(self):
+        """
+        """
+        self.posx = self.posx - self.speed
+
+    def update_rect(self, surface):
+        """
+        :param surface:
+        """
+        self.box = pygame.Rect(
+            (self.posx, self.posy), self.image_dimensions
+        )
+        pygame.draw.rect(surface, BORDER_COLOR, self.box, 1)
+
+    def update(self, surface, sprites):
+        """
+        :param surface:
+        :param sprites:
+        """
+        # TODO: Blit appropriate sprite image onto surface
+
+        self.frame = self.frame + 1
+
+
+class BushSprite:
+    """
+    """
+
+    # Sprite speed constant
+    speed = SPEED
+
+    # Image constants
+    factor = 0.25
+    image_dimensions = (
+        int(16 * SCALE * factor), int(9 * SCALE * factor)
+    )
+    # TODO: Load all sprite images
+
+    def __init__(self, start):
+        """
+        :param start:
+        """
+        # TODO: Select random sprite image
+
+        self.posx, self.posy = start
+
+        self.box = pygame.Rect((self.posx, self.posy), self.image_dimensions)
+
+    def move(self):
+        """
+        """
+        self.posx = self.posx - self.speed
+
+    def update_rect(self, surface):
+        """
+        :param surface:
+        """
+        self.box = pygame.Rect(
+            (self.posx, self.posy), self.image_dimensions
+        )
+        pygame.draw.rect(surface, BORDER_COLOR, self.box, 1)
+
+    def update(self, surface):
+        """
+        :param surface:
+        """
+        # TODO: Blit sprite image onto surface
+
+
+class BoneSprite:
+    """
+    """
+    # Sprite speed constant
+    speed = SPEED
+
+    # Image constants
+    interval = 3
+    factor = 1
+    image_dimensions = (int(SCALE * factor), int(SCALE * factor))
+    # TODO: Load sprite image
+
+    def __init__(self, start):
+        """
+        :param start:
+        """
+        # TODO: Generate rotations of sprite image
+
+        self.posx, self.posy = start
+        self.frame = 0
+
+        self.box = pygame.Rect(
+            (self.posx, self.posy), self.image_dimensions
+        )
+
+    def move(self):
+        """
+        """
+        self.posx -= self.speed
+
+    def update_rect(self, surface):
+        """
+        :param surface:
+        """
+        self.box = pygame.Rect(
+            (self.posx, self.posy), self.image_dimensions
+        )
+        pygame.draw.rect(surface, BORDER_COLOR, self.box, 1)
+
+    def update(self, surface):
+        """
+        :param surface:
+        """
+        # TODO: Blit appropriate sprite image onto surface
+
+        self.frame = self.frame + 1
+
+
+class PuddleSprite:
+    """
+    """
+    # Sprite speed constants
+    speed = SPEED
+
+    # Image constants
+    factor = 0.25
+    image_dimensions = (
+        int(16 * SCALE * factor), int(9 * SCALE * factor)
+    )
+    # TODO: Load sprite image
+
+    def __init__(self, start):
+        """
+        :param start:
+        """
+        self.posx, self.posy = start
+
+        self.box = pygame.Rect(
+            (self.posx, self.posy), self.image_dimensions
+        )
+
+    def move(self):
+        """
+        """
+        self.posx = self.posx - self.speed
+
+    def update_rect(self, surface):
+        """
+        :param surface:
+        """
+        self.box = pygame.Rect(
+            (self.posx, self.posy), self.image_dimensions
+        )
+        pygame.draw.rect(surface, BORDER_COLOR, self.box, 1)
+
+    def update(self, surface):
+        """
+        :param surface:
+        """
+        # TODO: Blit sprite image onto surface
+
 
 # TODO: Define class for duck sprites
 

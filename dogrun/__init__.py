@@ -61,7 +61,7 @@ def display_fps(surface, clock, digits=1):
     fps = round(clock.get_fps(), digits)
     percent_fps = round(fps / FPS * 100, digits)
 
-    text = str(fps) + " FPS (" + str(percent_fps) + "%)"
+    text = f"{fps} FPS ({percent_fps}%)"
     font = pygame.font.SysFont(
         "couriernew", int(SCALE * 0.5)
     )
