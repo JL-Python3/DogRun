@@ -1,14 +1,21 @@
 #! usr/bin/env python
 # dogrun/__init__.py
 
-# TODO: Define aspect ratio constants
-# TODO: Define scale constant
+# Aspect ratio constants: 16 x 10 aspect ratio (recommended)
+WIDTH = 32      # Pixels
+HEIGHT = 20     # Pixels
+# Scale constant
+SCALE = 30      # No unit
 
-# TODO: Define surface dimensions constants
+# Surface dimensions constants
+WINWIDTH = WIDTH * SCALE        # Pixels
+WINHEIGHT = HEIGHT * SCALE      # Pixels
 
-# TODO: Define framerate (frames per second) constant
+# Framerate constant
+FPS = 30        # Frames per Second
 
-# TODO: Define base sprite movement speed (pixels per frame) constant
+# Base movement speed constant
+SPEED = int(SCALE * 0.1)        # Pixels per Frame
 
 # TODO: Define default fill color (PyGame 'Color' object)
 
