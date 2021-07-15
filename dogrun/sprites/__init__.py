@@ -1,7 +1,14 @@
 #! usr/bin/env python
-# dogrun/__init__.py
+# dogrun/sprites/__init__.py
 
-# TODO: Define function to load all the images in a directory
+
+def load_images(directory, dimensions):
+    """
+    :param directory:
+    :param dimensions:
+    :return:
+    """
+    pass
 
 # TODO: Define class for dog sprites
 

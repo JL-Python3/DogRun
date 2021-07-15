@@ -1,7 +1,12 @@
 #! usr/bin/env python
 # dogrun/opening/__init__.py
 
-# TODO: Define function to load dog sprite images
+
+def load_dog_sprites():
+    """
+    :return:
+    """
+    pass
 
 # TODO: Define class for the opening screen
 
