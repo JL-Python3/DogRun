@@ -68,4 +68,4 @@ def display_fps(surface, clock, digits=1):
     text_surf = font.render(
         text, True, text_color
     )
-    # TODO: Blit text surface onto 'surface'
+    surface.blit(text_surf, (0, 0))
