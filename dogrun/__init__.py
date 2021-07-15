@@ -21,7 +21,8 @@ FPS = 30        # Frames per Second
 # Base movement speed constant
 SPEED = int(SCALE * 0.1)        # Pixels per Frame
 
-# TODO: Define default fill color (PyGame 'Color' object)
+# Define default fill color
+FILL = pygame.Color("dodgerblue4")
 
 
 def read_highscores():
@@ -56,11 +57,15 @@ def display_fps(surface, clock, digits=1):
     :param clock:
     :param digits:
     """
-    # TODO: Create PyGame 'Color' object
+    text_color = pygame.Color("black")
     fps = round(clock.get_fps(), digits)
     percent_fps = round(fps / FPS * 100, digits)
 
     text = str(fps) + " FPS (" + str(percent_fps) + "%)"
-    # TODO: Create PyGame 'Font' object
-    # TODO: Create PyGame text surface
-    # TODO: Add text surface to 'surface'
+    font = pygame.font.SysFont(
+        "couriernew", int(SCALE * 0.5)
+    )
+    text_surf = font.render(
+        text, True, text_color
+    )
+    # TODO: Blit text surface onto 'surface'

@@ -1,10 +1,18 @@
 #! usr/bin/env python
 # dogrun/__main__.py
 
-# TODO: Create PyGame 'Surface' object
-# TODO: Create PyGame 'Clock' object
+from dogrun import *
+from dogrun import game
 
-# TODO: Define default user entries (text, dog sprite)
+
+SURFACE = pygame.display.set_mode((WINWIDTH, WINHEIGHT))
+FPSCLOCK = pygame.time.Clock()
+
+pygame.display.set_caption("Dog Run")
+
+# Default user entries
+DEFAULT_TEXT = ""
+DEFAULT_DOG_SPRITE = None
 
 # Screen sequence loop
 while True:
@@ -14,6 +22,7 @@ while True:
     # TODO: Rewrite text default
     # TODO: Rewrite dog sprite default
 
-    # TODO: Create game screen object
-    # TODO: Run game screen
-    pass
+    GAME_SCREEN = game.GameScreen(
+        SURFACE, FPSCLOCK, "Shiba Inu", "Username"
+    )
+    GAME_SCREEN.run()
