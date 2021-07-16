@@ -92,9 +92,22 @@ class DogSprite:
         """
         keys = pygame.key.get_pressed()
 
-        # TODO: Check key presses (AWSD, arrows) and move sprite
+        # Check key presses (AWSD, arrows) and move sprite
+        if keys[pygame.K_UP] or keys[pygame.K_w]:
+            self.posy -= self.speed
+        if keys[pygame.K_DOWN] or keys[pygame.K_s]:
+            self.posy += self.speed
 
-        # TODO: Set sprite coordinates if position exceeds window bounds
+        if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+            self.posx -= self.speed
+        if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+            self.posx += self.speed
+
+        # Set sprite coordinates if position exceeds window bounds
+        self.posy = self.ybound[0] if self.posy <= self.ybound[0] else self.posy
+        self.posx = self.xbound[0] if self.posx <= self.xbound[0] else self.posx
+        self.posy = self.ybound[1] if self.posy >= self.ybound[1] else self.posy
+        self.posx = self.xbound[1] if self.posx >= self.xbound[1] else self.posx
 
     def update_rect(self, surface):
         """
