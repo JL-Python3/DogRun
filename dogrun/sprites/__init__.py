@@ -111,7 +111,9 @@ class DogSprite:
         :param surface:
         :param sprites:
         """
-        # TODO: Blit appropriate sprite image onto surface
+        # Blit appropriate sprite image onto surface
+        index = (self.frame // self.interval) % len(sprites)
+        surface.blit(sprites[index], (self.posx, self.posy))
 
         self.frame = self.frame + 1
 
@@ -180,7 +182,9 @@ class SquirrelSprite:
         :param surface:
         :param sprites:
         """
-        # TODO: Blit appropriate sprite image onto surface
+        # Blit appropriate sprite image onto surface
+        index = (self.frame // self.interval) % len(sprites)
+        surface.blit(sprites[index], (self.posx, self.posy))
 
         self.frame = self.frame + 1
 
@@ -287,7 +291,9 @@ class BoneSprite:
         """
         :param surface:
         """
-        # TODO: Blit appropriate sprite image onto surface
+        # Blit appropriate sprite image onto surface
+        index = (self.frame // self.interval) % len(self.images)
+        surface.blit(self.images[index], (self.posx, self.posy))
 
         self.frame = self.frame + 1
 

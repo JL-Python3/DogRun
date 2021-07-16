@@ -96,9 +96,24 @@ class GameScreen:
         """
         """
         while self.running:
-            # TODO: Check events
+            # Check events
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
+                    pygame.quit()
 
-            # TODO: Check for collisions between dog sprite and lane items sprites
+                if event.type == pygame.MOUSEBUTTONUP:
+                    self.handle_click(event.pos)
+
+            # Check for collisions between dog sprite and lane items sprites
+            for lane in self.lanes:
+                collided = self.check_collision(lane)
+                if collided:
+                    self.running = False
+                    write_highscores(
+                        self.username, self.score_display.score
+                    )
+                    break
 
             if not self.paused:
                 self.dog_sprite.move()
@@ -116,18 +131,49 @@ class GameScreen:
         """
         :param pos:
         """
-        # TODO: Check for click on exit button
+        # Check for click on exit button
+        if self.exit_button.box.collidepoint(pos):
+            self.running = False
 
-        # TODO: Check for clock on play/pause button
+        # Check for click on play/pause button
+        elif self.playpause_button.box.collidepoint(pos):
+            self.paused = not self.paused
 
     def check_collision(self, lane):
         """
         :param lane:
         :return:
         """
-        # TODO: Check for collision with modifier
+        # Check fo collision with modifier
+        for mod in lane.modifiers:
+            obs_bounds = (
+                mod.box.bottomleft, mod.box.bottomright,
+                mod.box.topleft, mod.box.topright,
+                mod.box.midleft, mod.box.midright,
+                mod.box.midtop, mod.box.midbottom
+            )
+            for point in obs_bounds:
+                if self.dog_sprite.box.collidepoint(point):
+                    if isinstance(mod, sprites.BoneSprite):
+                        self.score_display.score += 500
+                    elif isinstance(mod, sprites.PuddleSprite):
+                        self.score_display.score -= 250
+                    lane.modifiers.remove(mod)
+                    break
 
-        # TODO: Check for collision with obstacle
+        # Check for collision with obstacle
+        for obs in lane.obstacles:
+            obs_bounds = (
+                obs.box.bottomleft, obs.box.bottomright,
+                obs.box.topleft, obs.box.topright,
+                obs.box.midleft, obs.box.midright,
+                obs.box.midtop, obs.box.midbottom
+            )
+            for point in obs_bounds:
+                if self.dog_sprite.box.collidepoint(point):
+                    return True
+
+        return False
 
 
 class ScoreDisplay:
@@ -237,13 +283,21 @@ class Lane:
     """
     """
     # Obstacles
-    dynamic_obstacles = ()
-    static_obstacles = ()
+    dynamic_obstacles = (
+        sprites.SquirrelSprite,
+    )
+    static_obstacles = (
+        sprites.BushSprite,
+    )
     obstacle_opts = dynamic_obstacles + static_obstacles
 
     # Modifiers
-    dynamic_modifiers = ()
-    static_modifiers = ()
+    dynamic_modifiers = (
+        sprites.BoneSprite,
+    )
+    static_modifiers = (
+        sprites.PuddleSprite,
+    )
     modifier_opts = dynamic_modifiers + static_modifiers
 
     def __init__(
@@ -321,9 +375,19 @@ class Lane:
         """
         :param surface: A PyGame 'Surface' object
         """
-        # TODO: Update sprite images (obstacles)
+        # Update sprite images (obstacles)
+        for item in self.obstacles:
+            if type(item) in self.dynamic_obstacles:
+                try:
+                    item.update(surface, item.running_left)
+                except AttributeError:
+                    item.update(surface, item.flying_left)
+            elif type(item) in self.static_obstacles:
+                item.update(surface)
 
-        # TODO: Update sprite images (modifiers)
+        # Update sprite images (modifiers)
+        for item in self.modifiers:
+            item.update(surface)
 
         # Add obstacle
         if len(self.obstacles) < self.obstacle_limit:
