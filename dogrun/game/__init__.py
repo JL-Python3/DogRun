@@ -284,7 +284,8 @@ class Lane:
     """
     # Obstacles
     dynamic_obstacles = (
-        sprites.SquirrelSprite,
+        sprites.SquirrelSprite, sprites.GooseSprite, sprites.PigeonSprite,
+        sprites.DuckSprite
     )
     static_obstacles = (
         sprites.BushSprite,

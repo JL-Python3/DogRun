@@ -6,6 +6,8 @@ import sys
 
 from dogrun import *
 from dogrun import sprites
+from dogrun.opening.dog_sprite_selection import DogSpriteSelection
+from dogrun.opening.highscores import Highscores
 
 
 def load_dog_sprites():
@@ -46,7 +48,8 @@ class OpeningScreen:
         self.username_entry = UsernameEntry(default_username)
         self.dogsprite_display = DogSpriteDisplay(dog_sprite)
 
-        # TODO: Create popup objects
+        self.dogsprite_selection = DogSpriteSelection(self.dog_sprites)
+        self.highscores = Highscores()
 
         self.running = True
 
@@ -65,7 +68,11 @@ class OpeningScreen:
         self.username_entry.update(self.surface)
         self.dogsprite_display.update(self.surface)
 
-        # TODO: Update popups
+        # Update popups
+        if self.dogsprite_selection.active:
+            self.dogsprite_selection.update(self.surface)
+        if self.highscores.active:
+            self.highscores.update(self.surface)
 
     def run(self):
         """
@@ -92,23 +99,40 @@ class OpeningScreen:
     def handle_click(self, pos):
         """
         """
-        # TODO: Check for clicks in dog sprite selection popup
+        # Check for clicks in dog sprite selection popup
+        if self.dogsprite_selection.active:
+            if not self.dogsprite_selection.box.collidepoint(pos):
+                self.dogsprite_selection.active = False
+            if self.dogsprite_selection.select_button.box.collidepoint(pos):
+                self.dogsprite_display = DogSpriteDisplay(
+                    self.dogsprite_selection.dogsprite_display.dog_sprite
+                )
+                self.dogsprite_selection.active = False
+            for index, rect in enumerate(
+                    self.dogsprite_selection.dogsprite_options.rects
+            ):
+                if rect.collidepoint(pos):
+                    dog_sprite = self.dogsprite_selection.dogsprite_options.dog_sprites[index]
+                    self.dogsprite_selection.dogsprite_display.dog_sprite = dog_sprite
+                    break
+            return
 
-        # TODO: Check for clicks in highscores popup
+        # Check for clicks in highscores popup
+        if self.highscores.active:
+            if not self.highscores.box.collidepoint(pos):
+                self.highscores.active = False
+            return
 
         # Check for clicks in widgets
-        self.username_entry.active = False
         self.username_entry.active = False
         if self.username_entry.box.collidepoint(pos):
             self.username_entry.active = True
             if self.username_entry.text == self.username_entry.default_text:
                 self.username_entry.text = ""
         elif self.selectdog_button.box.collidepoint(pos):
-            # TODO: Activate dog sprite selection popup
-            pass
+            self.dogsprite_selection.active = True
         elif self.highscores_button.box.collidepoint(pos):
-            # TODO: Activate highscores popup
-            pass
+            self.highscores.active = True
         elif self.start_button.box.collidepoint(pos):
             if self.username_entry.text != "":
                 self.running = False

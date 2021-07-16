@@ -359,8 +359,208 @@ class PuddleSprite:
         surface.blit(self.image, (self.posx, self.posy))
 
 
-# TODO: Define class for duck sprites
+class DuckSprite:
+    """
+    """
+    ducks = (
+        "Ash", "Brown", "Black", "Classic", "Grey", "Red-Brown", "Silver",
+        "White"
+    )
 
-# TODO: Define class for pigeon sprites
+    # Frame interval constant
+    interval = 3
 
-# TODO: Define class for goose sprites
+    # Sprite speed constant
+    speed = int(SPEED * 1.5)
+
+    # Image constants
+    factor = 2
+    image_dimensions = (
+        int(SCALE * factor), int(SCALE * factor)
+    )
+
+    def __init__(self, start):
+        """
+        :param start:
+        """
+        self.name = random.choice(self.ducks)
+
+        self.directory = os.path.join("dogrun", "sprites", "ducks", self.name)
+
+        directories = sorted(
+            [os.path.join(self.directory, d) for d in os.listdir(self.directory)
+             if os.path.isdir(os.path.join(self.directory, d))]
+        )
+        images = tuple(
+            [load_images(d, self.image_dimensions) for d in directories]
+        )
+        (self.running_back, self.running_front, self.running_left,
+         self.running_right) = images
+
+        self.posx, self.posy = start
+        self.frame = 0
+
+        self.box = pygame.Rect(
+            (self.posx, self.posy), self.image_dimensions
+        )
+
+    def move(self):
+        """
+        """
+        self.posx -= self.speed
+
+    def update_rect(self, surface):
+        """
+        :param surface:
+        """
+        self.box = pygame.Rect(
+            (self.posx, self.posy), self.image_dimensions
+        )
+        pygame.draw.rect(surface, BORDER_COLOR, self.box, 1)
+
+    def update(self, surface, sprites):
+        """
+        :param surface:
+        :param sprites:
+        """
+        index = (self.frame // self.interval) % len(sprites)
+        surface.blit(sprites[index], (self.posx, self.posy))
+
+        self.frame += 1
+
+
+class PigeonSprite:
+    """
+    """
+    pigeons = (
+        "Blue", "Brown", "Red", "White"
+    )
+
+    # Frame interval constant
+    interval = 3
+
+    # Sprite speed constant
+    speed = int(SPEED * 4)
+
+    # Image constants
+    factor = 2
+    image_dimensions = (
+        int(SCALE * factor), int(SCALE * factor)
+    )
+
+    def __init__(self, start):
+        """
+        :param start:
+        """
+        self.name = random.choice(self.pigeons)
+
+        self.directory = os.path.join("dogrun", "sprites", "pigeons", self.name)
+
+        directories = sorted(
+            [os.path.join(self.directory, d) for d in os.listdir(self.directory)
+             if os.path.isdir(os.path.join(self.directory, d))]
+        )
+        images = tuple(
+            [load_images(d, self.image_dimensions) for d in directories]
+        )
+
+        (self.flying_back, self.flying_front, self.flying_left,
+         self.flying_right, self.sitting_back, self.sitting_front,
+         self.sitting_left, self.sitting_right) = images
+
+        self.posx, self.posy = start
+        self.frame = 0
+
+        self.box = pygame.Rect((self.posx, self.posy), self.image_dimensions)
+
+    def move(self):
+        """
+        """
+        self.posx -= self.speed
+
+    def update_rect(self, surface):
+        """
+        :param surface:
+        """
+        self.box = pygame.Rect(
+            (self.posx, self.posy), self.image_dimensions
+        )
+        pygame.draw.rect(surface, BORDER_COLOR, self.box, 1)
+
+    def update(self, surface, sprites):
+        """
+        :param surface:
+        :param sprites:
+        """
+        index = (self.frame // self.interval) % len(sprites)
+        surface.blit(sprites[index], (self.posx, self.posy))
+
+        self.frame += 1
+
+
+class GooseSprite:
+    """
+    """
+    geese = (
+        "Brown", "Classic", "Gold (Black)", "Gold (Gold)", "Grey", "Red",
+        "Silver", "White"
+    )
+
+    # Frame interval constant
+    interval = 3
+
+    # Sprite speed constant
+    speed = int(SPEED*1.5)
+
+    # Image constants
+    factor = 2
+    image_dimensions = (
+        int(SCALE*factor), int(SCALE*factor)
+    )
+
+    def __init__(self, start):
+        """
+        :param start:
+        """
+        self.name = random.choice(self.geese)
+
+        self.directory = os.path.join("dogrun", "sprites", "geese", self.name)
+
+        directories = sorted(
+            [os.path.join(self.directory, d) for d in os.listdir(self.directory)
+             if os.path.isdir(os.path.join(self.directory, d))]
+        )
+        images = tuple(
+            [load_images(d, self.image_dimensions) for d in directories]
+        )
+        (self.running_back, self.running_front, self.running_left,
+         self.running_right) = images
+
+        self.posx, self.posy = start
+        self.frame = 0
+
+        self.box = pygame.Rect((self.posx, self.posy), self.image_dimensions)
+
+    def move(self):
+        """
+        """
+        self.posx -= self.speed
+
+    def update_rect(self, surface):
+        """
+        :param surface:
+        """
+        self.box = pygame.Rect(
+            (self.posx, self.posy), self.image_dimensions
+        )
+        pygame.draw.rect(surface, BORDER_COLOR, self.box, 1)
+
+    def update(self, surface, sprites):
+        """
+        :param surface:
+        :param sprites:
+        """
+        index = (self.frame // self.interval) % len(sprites)
+        surface.blit(sprites[index], (self.posx, self.posy))
+
+        self.frame += 1
